@@ -1,10 +1,1 @@
-Đề tài: Bãi đỗ xe thông minh
-Mô tả: Bãi đỗ xe thông minh có giao diện web tích hợp chỉ đường đi đến chỗ trống gần nhất
-Nhiệm vụ: 
-- Cảm biến hồng ngoại (hoặc siêu âm) xác định slot đấy còn trống hay không -> hiển thị lên trang web
-- Barrier cảm biến đóng mở cửa
-- Thuật toán Dijkstra tìm đường đi ngắn nhất đến chỗ còn trống (user)
-- Giao diện admin có thể đóng mở cửa, đóng tắt chỗ đỗ
-- Thêm: 
-+ Đăng nhập đăng ký
-+ Đặt trước chỗ
+
