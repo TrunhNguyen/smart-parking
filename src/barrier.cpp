@@ -3,23 +3,25 @@
 unsigned long openTime = 0;
 bool isOpen = false;
 
-Barrier::Barrier(int pin) {
-    relayPin = pin;
+Barrier::Barrier(int pin, int openA, int closeA) {
+    servoPin = pin;
+    openAngle = openA;
+    closeAngle = closeA;
 }
 
 void Barrier::begin() {
-    pinMode(relayPin, OUTPUT);
-    close();
+    servo.attach(servoPin);
+    close(); 
 }
 
 void Barrier::open() {
-    digitalWrite(relayPin, HIGH);
+    servo.write(openAngle);
     isOpen = true;
     openTime = millis();
 }
 
 void Barrier::close() {
-    digitalWrite(relayPin, LOW);
+    servo.write(closeAngle);
     isOpen = false;
 }
 
