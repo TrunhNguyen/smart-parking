@@ -3,16 +3,15 @@
 
 #include <Arduino.h>
 
-#define NUM_SLOTS 5
+// SỬA TỪ 5 THÀNH 4 ĐỂ ĐỒNG BỘ VỚI SƠ ĐỒ 4 CHÂN CẢM BIẾN
+#define NUM_SLOTS 4
 
 class SlotManager {
 private:
-
     int pins[NUM_SLOTS];
     bool occupied[NUM_SLOTS];
 
 public:
-
     SlotManager(int slotPins[NUM_SLOTS]);
     void begin();
     void update();

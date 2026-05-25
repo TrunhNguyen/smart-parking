@@ -9,7 +9,8 @@ SlotManager::SlotManager(int slotPins[NUM_SLOTS]) {
 
 void SlotManager::begin() {
     for (int i = 0; i < NUM_SLOTS; i++) {
-        pinMode(pins[i], INPUT);
+        // SỬA TỪ INPUT THÀNH INPUT_PULLUP ĐỂ CHÂN ĐỌC KHÔNG BỊ NHIỄU LƠ LỬNG
+        pinMode(pins[i], INPUT_PULLUP);
     }
 }
 
@@ -17,9 +18,9 @@ void SlotManager::update() {
     for (int i = 0; i < NUM_SLOTS; i++) {
         int value = digitalRead(pins[i]);
         if (value == LOW)
-            occupied[i] = true;
+            occupied[i] = true;   // Có xe che khuất
         else
-            occupied[i] = false;
+            occupied[i] = false;  // Trống
     }
 }
 
