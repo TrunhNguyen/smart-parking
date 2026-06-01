@@ -4,18 +4,18 @@
 #include "barrier.h"
 #include "api.h"
 
-const char* ssid = "Huykhoi";
-const char* password = "12345677";
+const char* ssid = "Trunh";
+const char* password = "1234567898";
 
 // --- GIỮ NGUYÊN SƠ ĐỒ CHÂN NHƯ CODE ĐẦU TIÊN ---
-int slotPins[NUM_SLOTS] = {12, 14, 27, 26}; // 4 chân cảm biến IR cho 4 slot
+int slotPins[NUM_SLOTS] = {32, 14, 27, 26}; // 4 chân cảm biến IR cho 4 slot
 SlotManager slots(slotPins);
 
 #define RELAY_PIN 13 // Chân điều khiển rào chắn chuyển về chân 13
 Barrier barrier(RELAY_PIN);
 
 unsigned long lastSend = 0;
-int lastAvailableSpots = 0; // Lưu số chỗ trống ở vòng lặp trước
+int lastAvailableSpots = -1; // Khởi tạo bằng -1 để ép chạy kiểm tra ngay lần đầu tiên
 
 void connectWiFi() {
     WiFi.begin(ssid, password);
@@ -35,6 +35,15 @@ void setup() {
     // Khởi tạo trạng thái ban đầu
     slots.update();
     lastAvailableSpots = slots.getAvailable();
+
+    // Mở rào ngay khi khởi động nếu bãi chưa đầy
+    if (lastAvailableSpots > 0) {
+        Serial.println("Khoi dong: Bai con cho -> Mo barrier");
+        barrier.open();
+    } else {
+        Serial.println("Khoi dong: Bai da full -> Dong barrier");
+        barrier.close();
+    }
 }
 
 void loop() {
@@ -45,22 +54,23 @@ void loop() {
     if (currentAvailable != lastAvailableSpots) {
         
         if (currentAvailable == 0) {
-            // Trường hợp 1: Bãi vừa bị lấp đầy hoàn toàn -> ĐÓNG rào ngay lập tức
-            Serial.println("Bai da full -> Dong barrier khan cap!");
+            // Trường hợp 1: Bãi vừa bị lấp đầy hoàn toàn -> ĐÓNG rào
+            Serial.println("Bai da full -> Dong barrier!");
             barrier.close(); 
         } 
         else {
-            // Trường hợp 2: Số chỗ trống thay đổi và bãi VẪN CÒN CHỖ
-            Serial.println("Trang thai bai thay doi & van con cho -> Mo barrier trong 5s");
-            barrier.open(); // Mở rào và reset mốc thời gian đếm ngược
+            // Trường hợp 2: Bãi từ trạng thái FULL chuyển sang CÒN CHỖ -> MỞ rào lại
+            // Hoặc số chỗ trống thay đổi nhưng vẫn còn chỗ -> Cứ giữ rào mở
+            Serial.println("Bai con cho -> Mo/Giu barrier luon mo");
+            barrier.open(); 
         }
 
-        // Cập nhật lại trạng thái cũ
+        // Cập nhật lại trạng thái để tránh lặp lại logic
         lastAvailableSpots = currentAvailable;
     }
 
-    // Luôn luôn gọi hàm này để tự động đóng sau 5 giây (nếu rào đang mở)
-    barrier.autoClose(5000);
+    // --- XOÁ HOẶC COMMENT HÀM AUTO CLOSE ---
+    // barrier.autoClose(5000); // Không dùng nữa vì muốn barrier luôn mở
 
     // Gửi dữ liệu lên API mỗi 5 giây
     if (millis() - lastSend > 5000) {
