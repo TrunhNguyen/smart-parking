@@ -3,7 +3,7 @@
 #include "api.h"
 
 // Bạn nhớ thay đoạn "..." bằng endpoint chuẩn của backend nhé (ví dụ: update)
-String serverURL = "http://192.168.1.10:8000/api/.../";
+String serverURL = "http://172.20.10.2:8000/api/update/";
 
 void sendParkingData(int available, String slotJSON) {
 

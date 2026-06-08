@@ -73,7 +73,7 @@ void loop() {
     // barrier.autoClose(5000); // Không dùng nữa vì muốn barrier luôn mở
 
     // Gửi dữ liệu lên API mỗi 5 giây
-    if (millis() - lastSend > 5000) {
+    if (millis() - lastSend > 3000) {
         sendParkingData(
             currentAvailable,
             slots.toJSON()
